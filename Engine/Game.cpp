@@ -48,4 +48,5 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	field.Draw ( gfx );
 }
