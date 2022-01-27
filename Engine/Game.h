@@ -20,9 +20,10 @@
  ******************************************************************************************/
 #pragma once
 
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Graphics.h"
+#include "Engine/Keyboard.h"
+#include "Engine/Mouse.h"
+#include "Engine/Graphics.h"
+#include "Entities/Headers/MemeField.h"
 
 class Game
 {
@@ -42,5 +43,6 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	MemeField field;
 	/********************************/
 };

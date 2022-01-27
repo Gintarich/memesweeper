@@ -18,13 +18,15 @@
  *	You should have received a copy of the GNU General Public License					  *
  *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
  ******************************************************************************************/
-#include "MainWindow.h"
+#include "Engine/MainWindow.h"
 #include "Game.h"
+
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	field(20 )
 {
 }
 
@@ -38,6 +40,10 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if( wnd.mouse.LeftIsPressed() )
+	{
+		field.OnRevealClick ( wnd.mouse.GetPos ( ) );
+	}
 }
 
 void Game::ComposeFrame()
