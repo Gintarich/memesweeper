@@ -1,5 +1,5 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20											  *
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
  *																						  *
@@ -22,31 +22,35 @@
 #include "Game.h"
 
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
-	field(20 )
+	wnd(wnd),
+	gfx(wnd),
+	field(20)
 {
 }
 
-void Game::Go()
+void Game::Go( )
 {
-	gfx.BeginFrame();	
-	UpdateModel();
-	ComposeFrame();
-	gfx.EndFrame();
+	gfx.BeginFrame( );
+	UpdateModel( );
+	ComposeFrame( );
+	gfx.EndFrame( );
 }
 
-void Game::UpdateModel()
+void Game::UpdateModel( )
 {
-	if( wnd.mouse.LeftIsPressed() )
+	
+	if( wnd.mouse.LeftIsPressed( ) )
 	{
-		field.OnRevealClick ( wnd.mouse.GetPos ( ) );
+
+		field.OnRevealClick(wnd.mouse.GetPos( ));
+
 	}
 }
 
-void Game::ComposeFrame()
+void Game::ComposeFrame( )
 {
-	field.Draw ( gfx );
+	field.Draw(gfx);
 }
+
