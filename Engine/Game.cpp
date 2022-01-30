@@ -1,5 +1,5 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20											  *
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
  *																						  *
@@ -22,17 +22,17 @@
 #include "Game.h"
 #include "SpriteCodex.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
-	field( gfx.GetRect().GetCenter(),4 )
+	wnd(wnd),
+	gfx(wnd),
+	field(gfx.GetRect().GetCenter(), 4)
 {
 }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
+	gfx.BeginFrame();
 	UpdateModel();
 	ComposeFrame();
 	gfx.EndFrame();
@@ -40,11 +40,11 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	if( !field.GameIsWon() )
+	while( !wnd.mouse.IsEmpty() )
 	{
-		while( !wnd.mouse.IsEmpty() )
+		const auto e = wnd.mouse.Read();
+		if( field.GetState() == MemeField::State::Memeing )
 		{
-			const auto e = wnd.mouse.Read();
 			if( e.GetType() == Mouse::Event::Type::LPress )
 			{
 				const Vei2 mousePos = e.GetPos();
@@ -63,14 +63,15 @@ void Game::UpdateModel()
 			}
 		}
 	}
+
 }
 
 void Game::ComposeFrame()
 {
-	
-	field.Draw( gfx );
-	if( field.GameIsWon() )
+
+	field.Draw(gfx);
+	if( field.GetState() == MemeField::State::Winrar )
 	{
-		SpriteCodex::DrawWin(gfx.GetRect().GetCenter(),gfx);
+		SpriteCodex::DrawWin(gfx.GetRect().GetCenter(), gfx);
 	}
 }
