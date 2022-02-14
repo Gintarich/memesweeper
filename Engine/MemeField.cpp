@@ -152,6 +152,40 @@ MemeField::MemeField( const Vei2& center,int nMemes )
 	}
 }
 
+MemeField::MemeField(const Vei2& center, int nMemes, int widthIn, int heightIn)
+	:
+	width(widthIn),
+	height(heightIn),
+	topLeft(center - Vei2(width * SpriteCodex::tileSize, height * SpriteCodex::tileSize) / 2)
+{
+
+	field = new Tile[width * height];
+	assert(nMemes > 0 && nMemes < width* height);
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_int_distribution<int> xDist(0, width - 1);
+	std::uniform_int_distribution<int> yDist(0, height - 1);
+
+	for (int nSpawned = 0; nSpawned < nMemes; ++nSpawned)
+	{
+		Vei2 spawnPos;
+		do
+		{
+			spawnPos = { xDist(rng),yDist(rng) };
+		} while (TileAt(spawnPos).HasMeme());
+
+		TileAt(spawnPos).SpawnMeme();
+	}
+
+	for (Vei2 gridPos = { 0,0 }; gridPos.y < height; gridPos.y++)
+	{
+		for (gridPos.x = 0; gridPos.x < width; gridPos.x++)
+		{
+			TileAt(gridPos).SetNeighborMemeCount(CountNeighborMemes(gridPos));
+		}
+	}
+}
+
 void MemeField::Draw( Graphics& gfx ) const
 {
 	gfx.DrawRect( GetRect().GetExpanded( borderThickness ),borderColor );
@@ -205,6 +239,11 @@ void MemeField::OnFlagClick( const Vei2 & screenPos )
 MemeField::State MemeField::GetState() const
 {
 	return state;
+}
+
+void MemeField::DeleteResourses()
+{
+	delete[] field;
 }
 
 void MemeField::RevealTile( const Vei2& gridPos )
