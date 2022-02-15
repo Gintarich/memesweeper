@@ -38,7 +38,6 @@ private:
 		int nNeighborMemes = -1;
 	};
 public:
-	MemeField( const Vei2& center,int nMemes );
 	MemeField(const Vei2& center, int nMemes, int widthIn, int heightIn);
 	void Draw( Graphics& gfx ) const;
 	RectI GetRect() const;

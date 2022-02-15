@@ -1,5 +1,5 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20											  *
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
  *																						  *
@@ -22,18 +22,17 @@
 #include "Game.h"
 #include "SpriteCodex.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
-	menu( { gfx.GetRect().GetCenter().x,200 } ),
-	field( gfx.GetRect().GetCenter(),4 )
+	wnd(wnd),
+	gfx(wnd),
+	menu({ gfx.GetRect().GetCenter().x,200 })
 {
 }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
+	gfx.BeginFrame();
 	UpdateModel();
 	ComposeFrame();
 	gfx.EndFrame();
@@ -41,40 +40,60 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	while( !wnd.mouse.IsEmpty() )
+	while (!wnd.mouse.IsEmpty())
 	{
 		const auto e = wnd.mouse.Read();
-		if( state == State::Memesweeper )
+		if (state == State::Memesweeper)
 		{
-			if( field.GetState() == MemeField::State::Memeing )
+			if (field->GetState() == MemeField::State::Memeing)
 			{
-				if( e.GetType() == Mouse::Event::Type::LPress )
+				if (e.GetType() == Mouse::Event::Type::LPress)
 				{
 					const Vei2 mousePos = e.GetPos();
-					if( field.GetRect().Contains( mousePos ) )
+					if (field->GetRect().Contains(mousePos))
 					{
-						field.OnRevealClick( mousePos );
+						field->OnRevealClick(mousePos);
 					}
 				}
-				else if( e.GetType() == Mouse::Event::Type::RPress )
+				else if (e.GetType() == Mouse::Event::Type::RPress)
 				{
 					const Vei2 mousePos = e.GetPos();
-					if( field.GetRect().Contains( mousePos ) )
+					if (field->GetRect().Contains(mousePos))
 					{
-						field.OnFlagClick( mousePos );
+						field->OnFlagClick(mousePos);
 					}
 				}
 			}
+			else if ((field->GetState() == MemeField::State::Winrar) || (field->GetState() == MemeField::State::Fucked))
+			{
+
+				if ((e.GetType() == Mouse::Event::Type::LPress) || wnd.kbd.KeyIsPressed(VK_SPACE))
+				{
+					field->DeleteResourses();
+					delete field;
+					state = State::SelectionMenu;
+				}
+
+			}
 		}
+
 		else
 		{
-			const SelectionMenu::Size s = menu.ProcessMouse( e );
-			switch( s )
+			const SelectionMenu::Size s = menu.ProcessMouse(e);
+			switch (s)
 			{
 			case SelectionMenu::Size::Small:
-			case SelectionMenu::Size::Medium:
-			case SelectionMenu::Size::Large:
+				field = new MemeField(gfx.GetRect().GetCenter(), 3, 6, 4);
 				state = State::Memesweeper;
+				break;
+			case SelectionMenu::Size::Medium:
+				field = new MemeField(gfx.GetRect().GetCenter(), 5, 10, 6);
+				state = State::Memesweeper;
+				break;
+			case SelectionMenu::Size::Large:
+				field = new MemeField(gfx.GetRect().GetCenter(), 5, 12, 8);
+				state = State::Memesweeper;
+				break;
 			}
 		}
 	}
@@ -82,16 +101,17 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	if( state == State::Memesweeper )
+	if (state == State::Memesweeper)
 	{
-		field.Draw( gfx );
-		if( field.GetState() == MemeField::State::Winrar )
+		field->Draw(gfx);
+		if (field->GetState() == MemeField::State::Winrar)
 		{
-			SpriteCodex::DrawWin( gfx.GetRect().GetCenter(),gfx );
+			SpriteCodex::DrawWin(gfx.GetRect().GetCenter(), gfx);
 		}
+
 	}
 	else
 	{
-		menu.Draw( gfx );
+		menu.Draw(gfx);
 	}
 }
